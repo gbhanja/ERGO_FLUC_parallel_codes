@@ -32,7 +32,7 @@ def make_filename():
     return f"data_N{N_arr[0]}-{N_arr[-1]}_step{N_arr[1]-N_arr[0]}_nmax{nmax}_w{ω}_w0{ω0}_g{g}.npz"
 
 # Full path
-filename = os.path.join(data_folder, make_filename())
+filename = os.path.join(data_folder, "Fluc_erg_OP")
 
 print("Data file:", filename)
 
@@ -187,7 +187,8 @@ else:
         variance=E_var
     )
 
-    print("Saved:", filename)
+    print(f"Saved results to {filename}")
+    print("Simulation completed successfully.")
 
 ############################
 # Derived quantities
