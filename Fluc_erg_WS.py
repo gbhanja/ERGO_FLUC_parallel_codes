@@ -16,7 +16,7 @@ print("Current working directory:", os.getcwd())
 ############
 
 N_arr = np.arange(2, 203, 4)
-nmax = 80
+nmax = 300
 ω = 1.0
 ω0 = 1.0
 g = 1.0
