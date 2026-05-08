@@ -1,8 +1,3 @@
-# Generated from: Fluc_erg_OP_CO_sym_full (1).ipynb
-# Converted at: 2026-05-06T10:56:16.393Z
-# Next step (optional): refactor into modules & generate tests with RunCell
-# Quick start: pip install runcell
-
 import numpy as np
 import qutip as qt
 import matplotlib.pyplot as plt
