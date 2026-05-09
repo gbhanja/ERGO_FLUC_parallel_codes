@@ -442,10 +442,14 @@ def compute_moments2(i, N):
 
             mean_E_sq += pnm[n, m] * (ΔE**2)
 
-            E_third += pnm[n, m] * (ΔE**3)
+            mean_E_cube += pnm[n, m] * (ΔE**3)
 
+    # central variance
     var = mean_E_sq - erg**2
 
+    # third CENTRAL moment
+    E_third = (mean_E_cube - 3 * mean_E_sq * erg + 2 * (erg**3))
+    
     ratio = erg / Eb
 
     return N, τ, Eb, erg, ratio, var, E_third
