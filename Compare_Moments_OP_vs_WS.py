@@ -425,7 +425,7 @@ def compute_moments2(i, N):
 
     erg = 0
     mean_E_sq = 0
-    E_third = 0
+    mean_E_cube = 0
 
     # TPM ergotropy and variance
     for n in range(len(e_val)):
