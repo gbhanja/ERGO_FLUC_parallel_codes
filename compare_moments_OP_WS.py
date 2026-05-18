@@ -32,7 +32,7 @@ def make_filename():
 
 # Full path
 
-filename = os.path.join(data_folder, "Fluc_erg_OP_moments_updated")
+filename = os.path.join(data_folder, "Fluc_erg_OP_all_moments.npz")
 
 print("Data file:", filename)
 
@@ -223,7 +223,7 @@ def make_filename():
     return f"data_N{N_arr[0]}-{N_arr[-1]}_step{N_arr[1]-N_arr[0]}_nmax{nmax}_w{ω}_w0{ω0}_g{g}.npz"
 
 # Full path
-filename = os.path.join(data_folder, "Fluc_erg_WS_moments_new")
+filename = os.path.join(data_folder, "Fluc_erg_WS_all_moments.npz")
 
 print("Data file:", filename)
 
