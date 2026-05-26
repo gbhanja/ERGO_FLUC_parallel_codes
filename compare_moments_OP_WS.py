@@ -114,40 +114,42 @@ def compute_moments1(i, N):
 
     # Clip numerical noise to prevent negative probabilities
     r_vals = np.maximum(r_vals, 0) 
+    
     # Renormalize 
     r_vals = r_vals / np.sum(r_vals)
-        
+
+    # Density matrix eigenvalues in decreasing order
     idx = np.argsort(r_vals)[::-1]
     r_vals = r_vals[idx]
     r_vecs = [r_vecs[i] for i in idx]
 
     # assign degenerate energies 
-
     e_vals = np.array([0] + [ω0]*N)
-    
-    
-    E_B = qt.expect(HB, rho_b)
 
-    # Build the passive Hamiltonian operator
+    # passive Hamiltonian operator
     H_pass = sum(e_vals[m] * r_vecs[m] * r_vecs[m].dag() for m in range(len(r_vals)))
 
-    # Define the quantum work operator W = H_B - H_pass
+    # Define the ergotropy operator W = H_B - H_pass
     W_op = HB - H_pass
-    
+
+    # first moment(ergotropy)
     E_erg = qt.expect(W_op, rho_b)
 
+    # second moment
     W_2 = qt.expect(W_op**2, rho_b)
 
+    # variance
     ΔE2 = W_2 - (E_erg)**2
 
-    # Third raw moment
+    # Third moment
     W_3 = qt.expect(W_op**3, rho_b)
-    
-    ΔE = np.sqrt(ΔE2)
+
+    # Fourth moment
+    W_4 = qt.expect(W_op**4, rho_b)
 
     Ratio = E_erg / E_B
 
-    return N, τ, E_B, E_erg, Ratio, ΔE2, W_3
+    return N, τ, E_B, E_erg, Ratio, ΔE2, W_3, W_4
 
 results = Parallel(n_jobs=2)(delayed(compute_moments1)(i, N) for i, N in enumerate(tqdm(N_arr, desc="Running simulation 2")))
 
@@ -165,6 +167,7 @@ if os.path.exists(filename):
     E_ratio = data["ratio"]
     E_var = data["variance"]
     E_third = data["third_moment"]
+    E_fourth = data["fourth_moment"]
 
 else:
     print("Running simulation...")
@@ -173,7 +176,7 @@ else:
 
     results = Parallel(n_jobs=-1)(delayed(compute_moments1)(i, N) for i, N in enumerate(tqdm(N_arr, desc="All Moments1")))
 
-    N_out, tau_out, Eb_out, Eerg_out, ratio_out, var_out, third_moment_out = zip(*results)
+    N_out, tau_out, Eb_out, Eerg_out, ratio_out, var_out, third_moment_out, fourth_moment_out = zip(*results)
 
     N_arr = np.array(N_out)
     τ_list = np.array(tau_out)
@@ -182,8 +185,9 @@ else:
     E_ratio = np.array(ratio_out)
     E_var = np.array(var_out)
     E_third = np.array(third_moment_out)
+    E_fourth = np.array(fourth_moment_out)
 
-    np.savez_compressed(filename, N=N_arr, tau=τ_list, Eb=E_B_arr, Eerg=E_ergo, ratio=E_ratio, variance=E_var, third_moment=E_third)
+    np.savez_compressed(filename, N=N_arr, tau=τ_list, Eb=E_B_arr, Eerg=E_ergo, ratio=E_ratio, variance=E_var, third_moment=E_third, fourth_moment=E_fourth)
 
     print(f"Saved results to {filename}")
     print("Simulation completed successfully.")
@@ -387,7 +391,7 @@ def compute_moments2(i, N):
     # Initial state
     ψ0 = initial_state(N, nmax, "coherent")
 
-    opts = {"atol": 1e-16, "rtol": 1e-14, "nsteps": 1000000}
+    opts = {"atol": 1e-16, "rtol": 1e-14, "nsteps": 1000000}           ## ODE solver options
 
     # Evolve until τ
     result = qt.sesolve(H, ψ0, [0, τ], options=opts)
@@ -404,8 +408,9 @@ def compute_moments2(i, N):
     pnm, r_val, e_val = pnm_matrix(ρb, HB)
 
     erg = 0.0
-    mean_E_sq = 0.0
+    E_second = 0.0
     E_third = 0.0
+    E_fourth = 0.0
 
     # TPM ergotropy and moments
     for n in range(len(e_val)):
@@ -419,18 +424,24 @@ def compute_moments2(i, N):
 
             ΔE = En - Em_pass
 
+            # first moment(ergotropy)
             erg += pnm[n, m] * ΔE
 
-            mean_E_sq += pnm[n, m] * (ΔE**2)
+            # second moment
+            E_second += pnm[n, m] * (ΔE**2)
 
+            # third moment
             E_third += pnm[n, m] * (ΔE**3)
+            
+            # fourth moment
+            E_fourth += pnm[n, m] * (ΔE**4)
 
             # variance
             var = mean_E_sq - erg**2
 
             ratio = erg / Eb
 
-    return N, τ, Eb, erg, ratio, var, E_third
+    return N, τ, Eb, erg, ratio, var, E_third, E_fourth
 
 results = Parallel(n_jobs=-1)(delayed(compute_moments2)(i, N) for i, N in enumerate(tqdm(N_arr, desc="Running simulation 4")))
 
@@ -449,6 +460,7 @@ if os.path.exists(filename):
     E_ratio = data["ratio"]
     E_var = data["variance"]
     E_third = data["third_moment"]
+    E_fourth = data["fourth_moment"]
 
 else:
     print("Running simulation...")
@@ -457,7 +469,7 @@ else:
 
     results = Parallel(n_jobs=-1)(delayed(compute_moments2)(i, N) for i, N in enumerate(tqdm(N_arr, desc="All Moments2")))
 
-    N_out, tau_out, Eb_out, Eerg_out, ratio_out, var_out, third_moment_out = zip(*results)
+    N_out, tau_out, Eb_out, Eerg_out, ratio_out, var_out, third_moment_out, fourth_moment_out = zip(*results)
 
     N_arr = np.array(N_out)
     τ_list = np.array(tau_out)
@@ -466,8 +478,9 @@ else:
     E_ratio = np.array(ratio_out)
     E_var = np.array(var_out)
     E_third = np.array(third_moment_out)
+    E_fourth = np.array(fourth_moment_out)
 
-    np.savez_compressed(filename, N=N_arr, tau=τ_list, Eb=E_B_arr, Eerg=E_ergo, ratio=E_ratio, variance=E_var, third_moment=E_third)
+    np.savez_compressed(filename, N=N_arr, tau=τ_list, Eb=E_B_arr, Eerg=E_ergo, ratio=E_ratio, variance=E_var, third_moment=E_third, fourth_moment=E_fourth)
 
     print(f"Saved results to {filename}")
     print("Simulation completed successfully.")
