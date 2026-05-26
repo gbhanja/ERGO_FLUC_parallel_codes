@@ -437,7 +437,7 @@ def compute_moments2(i, N):
             E_fourth += pnm[n, m] * (ΔE**4)
 
             # variance
-            var = mean_E_sq - erg**2
+            var = E_second - erg**2
 
             ratio = erg / Eb
 
