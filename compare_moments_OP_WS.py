@@ -136,7 +136,7 @@ def compute_moments1(i, N):
     E_erg = qt.expect(W_op, rho_b)
 
     # second moment
-    W_2 = qt.expect(W_op**2, rho_b)
+    W_2 = W_2 = (qt.expect(HB**2, rho_b) + sum(r_vals[j]*(e_vals[j])**2 for j in range(len(r_vals)))) - 2 * sum(e_vals[i]*r_vals[i]*qt.expect(HB, r_vecs[i]) for i in range(len(r_vals)))
 
     # variance
     ΔE2 = W_2 - (E_erg)**2
