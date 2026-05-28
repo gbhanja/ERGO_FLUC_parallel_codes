@@ -24,10 +24,10 @@ os.makedirs(data_folder, exist_ok=True)
 
 # Filename with parameters
 def make_filename():
-    return f"data_N{N_arr[0]}-{N_arr[-1]}_step{N_arr[1]-N_arr[0]}_nmax{nmax}_w{ω}_w0{ω0}_g{g}.npz"
+    return f"data_N{N_arr[0]}-{N_arr[-1]}_step{N_arr[1]-N_arr[0]}_nc{nc}_w{ω}_w0{ω0}_g{g}.npz"
 
 # Full path
-filename = os.path.join(data_folder, "Fluc_erg_CS_OP")
+filename = os.path.join(data_folder, "Fluc_erg_CS_OP.npz")
 
 print("Data file:", filename)
 
@@ -88,7 +88,7 @@ def central_spin_chain(N, nc, ω, ω0, g):
 # ======= Battery-only Hamiltonian ==============
 
 
-    HB_local = ω * (JzB + 0.5 * N * IB)
+    HB_local = ω0 * (JzB + 0.5 * N * IB)
 
     return H, HB, HB_local
 
@@ -160,6 +160,7 @@ def compute_ergotropy(i, N):
 
     # Clip numerical noise to prevent negative probabilities
     r_vals = np.maximum(r_vals, 0) 
+    
     # Renormalize 
     r_vals = r_vals / np.sum(r_vals)
     
