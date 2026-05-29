@@ -16,7 +16,7 @@ print("Current working directory:", os.getcwd())
 ############
 
 N_arr = np.arange(2, 203, 4)
-nc = 250
+# nc = N_arr                           # charger size equal to battery size
 ω = 1.0
 ω0 = 1.0
 g = 1.0
@@ -28,7 +28,7 @@ os.makedirs(data_folder, exist_ok=True)
 
 # Filename with parameters
 def make_filename():
-    return f"data_N{N_arr[0]}-{N_arr[-1]}_step{N_arr[1]-N_arr[0]}_nc{nc}_w{ω}_w0{ω0}_g{g}.npz"
+    return f"data_N{N_arr[0]}-{N_arr[-1]}_step{N_arr[1]-N_arr[0]}_w{ω}_w0{ω0}_g{g}.npz"
 
 # Full path
 filename = os.path.join(data_folder, "Fluc_erg_CS_WS.npz")
@@ -40,6 +40,9 @@ print("Data file:", filename)
 #############################
 
 def central_spin_chain(N, nc, ω, ω0, g):
+
+    N = int(N)
+    nc = int(nc)
    
 # ======== Collective Battery operators ============
 
@@ -121,6 +124,9 @@ def passive_state(rho, H):
 
 def initial_state(N, nc):
 
+    N = int(N)
+    nc = int(nc)
+
 # ========= Battery state: all spins DOWN (ground) ================
     
     psiB = qt.basis(N+1, N)
@@ -197,6 +203,9 @@ def extract_Cn_dicke(rho_b, N):
 ##############################################
 
 def compute_tau(N):
+
+    nc = N
+
     H, HB, HB_local = central_spin_chain(N, nc, ω, ω0, g)
   
     psi0 = initial_state(N, nc)
@@ -219,6 +228,8 @@ def compute_tau(N):
 
 def compute_ergotropy(i, N):
 
+    nc = N
+    
     τ = τ_list[i]
 
     # Rebuild Hamiltonian
