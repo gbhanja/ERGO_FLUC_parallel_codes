@@ -1,3 +1,13 @@
+
+Parallelized QuTiP codes for computing ergotropy, ergotropy fluctuations,
+work statistics, and higher moments in quantum battery models:
+
+- Tavis–Cummings (TC)
+- Dicke
+- Central Spin (CS)
+
+Both standard and Kac-scaled interactions are included.
+
 This repository contains the following branches:
 
 [![Operator Method](https://img.shields.io/badge/TC--operator--method-blue)](https://github.com/gbhanja/ERGO_FLUC_parallel_codes/tree/TC-operator-method)
@@ -50,3 +60,12 @@ This repository contains the following branches:
 ## Higher Moments of Ergotropy
 
 - [TC All Moments](https://github.com/gbhanja/ERGO_FLUC_parallel_codes/tree/TC-all-moments)
+
+| Model | Operator Method | Work Statistics |
+|---------|---------|---------|
+| TC | [Link](...) | [Link](...) |
+| TC Kac | [Link](...) | [Link](...) |
+| Dicke | [Link](...) | [Link](...) |
+| Dicke Kac | [Link](...) | [Link](...) |
+| CS | [Link](...) | [Link](...) |
+| CS Kac | [Link](...) | [Link](...) |
