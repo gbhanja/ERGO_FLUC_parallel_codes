@@ -25,3 +25,28 @@ This repository contains the following branches:
 [![Work Statistics](https://img.shields.io/badge/CS--Kac--work--statistics-green)](https://github.com/gbhanja/ERGO_FLUC_parallel_codes/tree/CS--Kac-work-statistics)
 
 [![Moments of ergotropy](https://img.shields.io/badge/TC--all--moments-yellow)](https://github.com/gbhanja/ERGO_FLUC_parallel_codes/tree/TC-all-moments)
+
+
+# Branches
+
+## Operator Method
+
+- [TC Operator Method](https://github.com/gbhanja/ERGO_FLUC_parallel_codes/tree/TC-operator-method)
+- [TC Kac Operator Method](https://github.com/gbhanja/ERGO_FLUC_parallel_codes/tree/TC-Kac-operator-method)
+- [Dicke Operator Method](https://github.com/gbhanja/ERGO_FLUC_parallel_codes/tree/Dicke-operator-method)
+- [Dicke Kac Operator Method](https://github.com/gbhanja/ERGO_FLUC_parallel_codes/tree/Dicke-Kac-operator-method)
+- [CS Operator Method](https://github.com/gbhanja/ERGO_FLUC_parallel_codes/tree/CS-operator-method)
+- [CS Kac Operator Method](https://github.com/gbhanja/ERGO_FLUC_parallel_codes/tree/CS-Kac-operator-method)
+
+## Work Statistics
+
+- [TC Work Statistics](https://github.com/gbhanja/ERGO_FLUC_parallel_codes/tree/TC-work-statistics)
+- [TC Kac Work Statistics](https://github.com/gbhanja/ERGO_FLUC_parallel_codes/tree/TC-Kac-work-statistics)
+- [Dicke Work Statistics](https://github.com/gbhanja/ERGO_FLUC_parallel_codes/tree/Dicke-work-statistics)
+- [Dicke Kac Work Statistics](https://github.com/gbhanja/ERGO_FLUC_parallel_codes/tree/Dicke-Kac-work-statistics)
+- [CS Work Statistics](https://github.com/gbhanja/ERGO_FLUC_parallel_codes/tree/CS-work-statistics)
+- [CS Kac Work Statistics](https://github.com/gbhanja/ERGO_FLUC_parallel_codes/tree/CS-Kac-work-statistics)
+
+## Higher Moments of Ergotropy
+
+- [TC All Moments](https://github.com/gbhanja/ERGO_FLUC_parallel_codes/tree/TC-all-moments)
