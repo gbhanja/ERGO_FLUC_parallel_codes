@@ -9,7 +9,7 @@ Both standard and Kac-scaled interactions are included.
 
 ### This repository contains the following branches:
 
-## Operator Method
+## Operator Method:
 
 - [TC Operator Method](https://github.com/gbhanja/ERGO_FLUC_parallel_codes/tree/TC-operator-method)
 - [TC Operator Method with Kac-scaling](https://github.com/gbhanja/ERGO_FLUC_parallel_codes/tree/TC-Kac-operator-method)
@@ -18,7 +18,7 @@ Both standard and Kac-scaled interactions are included.
 - [CS Operator Method](https://github.com/gbhanja/ERGO_FLUC_parallel_codes/tree/CS-operator-method)
 - [CS Operator Method with Kac-scaling](https://github.com/gbhanja/ERGO_FLUC_parallel_codes/tree/CS-Kac-operator-method)
 
-## Work Statistics
+## Work Statistics:
 
 - [TC Work Statistics](https://github.com/gbhanja/ERGO_FLUC_parallel_codes/tree/TC-work-statistics)
 - [TC Work Statistics with Kac-scaling](https://github.com/gbhanja/ERGO_FLUC_parallel_codes/tree/TC-Kac-work-statistics)
