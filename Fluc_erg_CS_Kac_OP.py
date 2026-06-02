@@ -125,7 +125,7 @@ def initial_state(N, nc):
 
 def compute_tau(N):
 
-    nc = N
+    nc = int(N)
 
     H, HB, HB_local = central_spin_chain(N, nc, ω, ω0, g)
     
@@ -155,7 +155,7 @@ def compute_tau(N):
 
 def compute_ergotropy(i, N):
 
-    nc = N
+    nc = int(N)
 
     τ = τ_list[i]
     
