@@ -27,7 +27,7 @@ def make_filename():
     return f"data_N{N_arr[0]}-{N_arr[-1]}_step{N_arr[1]-N_arr[0]}_nmax{nmax}_w{ω}_w0{ω0}_g{g}.npz"
 
 # Full path
-filename = os.path.join(data_folder, "Fluc_erg_OP")
+filename = os.path.join(data_folder, "Fluc_erg_OP.npz")
 
 print("Data file:", filename)
 
@@ -73,9 +73,14 @@ def compute_tau(N):
     HB_full = qt.tensor(qt.qeye(nmax), HB)
     psi0 = initial_state(N, nmax, "coherent")
 
-    opts = qt.Options(atol=1e-16, rtol=1e-14)         ## ODE solver options
+    opts = {
+        "atol":1e-16, 
+        "rtol":1e-14}            ## ODE solver options
+
     res = qt.sesolve(H, psi0, tlist, e_ops=HB_full, options=opts)
+
     EB = np.array(res.expect[0])
+
     power = EB / tlist
 
     τ = tlist[np.argmax(power)]
@@ -97,7 +102,10 @@ def compute_ergotropy(i, N):
     
     psi0 = initial_state(N, nmax, "coherent")
 
-    opts = qt.Options(atol=1e-16, rtol=1e-14)         ## ODE solver options
+    opts = {
+        "atol":1e-16, 
+        "rtol":1e-14}            ## ODE solver options
+
     res = qt.sesolve(H, psi0, [0, τ], options=opts)
     
     rho_b = res.states[-1].ptrace(1)
