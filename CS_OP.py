@@ -166,7 +166,10 @@ def compute_ergotropy(i, N):
     
     psi0 = initial_state(N, nc)
 
-    opts = qt.Options(atol=1e-16, rtol=1e-14, nsteps=100000)        ## ODE solver options
+    opts = {
+        "atol":1e-16, 
+        "rtol":1e-14,
+        "nsteps":100000}            ## ODE solver options
     
     res = qt.sesolve(H, psi0, [0, τ], options=opts)
     
