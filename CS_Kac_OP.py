@@ -81,7 +81,7 @@ def central_spin_chain(N, nc, ω, ω0, g):
 
 # ======== Interaction Hamiltonian ===========
 
-    Hint = (g / np.sqrt(N)) * (JpB_full * JmC_full + JmB_full * JpC_full)
+    Hint = (g / N) * (JpB_full * JmC_full + JmB_full * JpC_full)
     
 # ======== Total Hamiltonian =====================
 
