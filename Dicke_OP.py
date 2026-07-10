@@ -11,7 +11,7 @@ print("Current working directory:", os.getcwd())
 # parameters
 ############
 
-N_arr = np.arange(2, 502, 2)
+N_arr = np.arange(2, 402, 2)
 nmax = int(N_arr[-1] + 8*np.sqrt(N_arr[-1]))      # Fock space dimension, adjusted for larger N
 ω = 1.0
 ω0 = 1.0
