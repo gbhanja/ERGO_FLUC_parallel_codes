@@ -73,8 +73,6 @@ def compute_tau(N):
     HB_full = qt.tensor(qt.qeye(nmax), HB)
     psi0 = initial_state(N, nmax, "coherent")
 
-    # Adaptive time window to capture the collective speedup.
-    # Without Kac scaling, the optimal charging time scales as ~ 1/N.
 
     t_max =  1.16556 / ( g * np.sqrt(N))
     tlist_local = np.linspace(t_max * 0.001, t_max, 1000)
