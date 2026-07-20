@@ -81,7 +81,7 @@ def compute_tau(N):
     
     psi0 = initial_state(N, nmax, "fock")
 
-    t_max =  2*np.pi/(g*np.sqrt(N_arr[-1]))
+    t_max =  2*np.pi/(g*np.sqrt(N))
     
     tlist_local = np.linspace(0.001, t_max, 1000)
 
