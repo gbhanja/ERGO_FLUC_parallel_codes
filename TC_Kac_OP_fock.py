@@ -26,7 +26,7 @@ def make_filename():
     return f"data_N{N_arr[0]}-{N_arr[-1]}_step{N_arr[1]-N_arr[0]}_w{ω}_w0{ω0}_g{g}.npz"
 
 # Full path
-filename = os.path.join(data_folder, "TC_Kac_OP_fock.npz")
+filename = os.path.join(data_folder, "TC_Kac_OP_foCK.npz")
 
 print("Data file:", filename)
 
@@ -133,6 +133,32 @@ def compute_ergotropy(i, N):
     
     rho_b = res.states[-1].ptrace(1)
 
+# Cavity diagnostics
+
+    # cavity reduced density matrix
+    rho_c = res.states[-1].ptrace(0)
+
+# photon number probabilities
+    photon_pop = np.real(np.diag(rho_c.full()))
+
+# occupation of highest Fock level
+    edge_population = photon_pop[-1]
+
+# average photon number
+    n_mean = qt.expect(qt.num(nmax), rho_c)
+
+# highest occupied level above tolerance
+    tol = 1e-10
+    occupied = np.where(photon_pop > tol)[0]
+
+    if len(occupied) == 0:
+        highest_occupied = 0
+    else:
+        highest_occupied = occupied[-1]
+
+
+# Single-spin Bloch vector
+
     rx = 2 * qt.expect(Sx, rho_b) / N
     ry = 2 * qt.expect(Sy, rho_b) / N
     rz = 2 * qt.expect(Sz, rho_b) / N
@@ -173,7 +199,7 @@ def compute_ergotropy(i, N):
 
     Ratio = E_erg / E_B
     
-    return N, τ, E_B, E_erg, Ratio, ΔE2, W_2, spin_purity
+    return N, τ, E_B, E_erg, Ratio, ΔE2, W_2, spin_purity, n_mean, edge_population, highest_occupied
     
 results = Parallel(n_jobs=-1)(delayed(compute_ergotropy)(i, N) for i, N in enumerate(tqdm(N_arr, desc="Running simulation 2")))
 
@@ -192,6 +218,10 @@ if os.path.exists(filename):
     E_var = data["variance"]
     E_W2 = data["W2"]
     Spin_Purity = data["spin_purity"]
+    PhotonMean = data["photon_mean"]
+    EdgePopulation = data["edge_population"]
+    HighestOccupied = data["highest_occupied"]
+
 else:
     print("Running simulation...")
 
@@ -205,7 +235,7 @@ else:
         for i, N in enumerate(tqdm(N_arr, desc="Ergotropy"))
     )
 
-    N_out, tau_out, Eb_out, Eerg_out, ratio_out, var_out, W2_out, spin_purity_out = zip(*results)
+    N_out, tau_out, Eb_out, Eerg_out, ratio_out, var_out, W2_out, spin_purity_out, n_mean_out, edge_population_out, highest_out = zip(*results)
 
     N_arr = np.array(N_out)
     τ_list = np.array(tau_out)
@@ -215,7 +245,11 @@ else:
     E_var = np.array(var_out)
     E_W2 = np.array(W2_out)
     Spin_Purity = np.array(spin_purity_out)
+    PhotonMean = np.array(n_mean_out)
+    EdgePopulation = np.array(edge_population_out)
+    HighestOccupied = np.array(highest_out)
 
+    
     np.savez_compressed(
         filename,
         N=N_arr,
@@ -225,7 +259,10 @@ else:
         ratio=E_ratio,
         variance=E_var,
         W2=E_W2,
-        spin_purity=Spin_Purity
+        spin_purity=Spin_Purity,
+        photon_mean=PhotonMean,
+        edge_population=EdgePopulation,
+        highest_occupied=HighestOccupied
     )
 
     print(f"Saved results to {filename}")
