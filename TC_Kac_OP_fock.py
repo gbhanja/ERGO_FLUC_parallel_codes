@@ -26,7 +26,7 @@ def make_filename():
     return f"data_N{N_arr[0]}-{N_arr[-1]}_step{N_arr[1]-N_arr[0]}_w{ω}_w0{ω0}_g{g}.npz"
 
 # Full path
-filename = os.path.join(data_folder, "TC_Kac_OP_foCK.npz")
+filename = os.path.join(data_folder, "TC_Kac_OP_fock.npz")
 
 print("Data file:", filename)
 
