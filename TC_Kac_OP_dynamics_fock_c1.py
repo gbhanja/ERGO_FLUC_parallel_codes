@@ -84,9 +84,9 @@ def compute_dynamics(N, tlist):
     psi0 = initial_state(N, nmax, "fock")      
 
     opts = {
-        "atol":1e-16,
-        "rtol":1e-14,
-        "nsteps":1000000
+        "atol":1e-8,
+        "rtol":1e-6,
+        "nsteps":500000
     }
 
     res = qt.sesolve(H, psi0, tlist, options=opts)
