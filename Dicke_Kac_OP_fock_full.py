@@ -113,7 +113,7 @@ def passive_moments(r_vals, ω0):
 
 def compute_tau(N):
     
-    nmax = N + 1
+    nmax = N + 400
 
     H, HB, _, _, _ = dicke_fun(N, nmax, ω, ω0, g)
     
@@ -154,7 +154,7 @@ def compute_tau(N):
 
 def compute_ergotropy(i, N):
 
-    nmax = N + 1
+    nmax = N + 400
 
     τ = τ_list[i]
     
