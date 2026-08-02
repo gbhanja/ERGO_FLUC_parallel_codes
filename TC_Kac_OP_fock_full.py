@@ -74,7 +74,7 @@ def initial_state(N, nmax, state):
 # Passive state moments
 ###########################
 
-def passive_moments(r_vals, omega0):
+def passive_moments(r_vals, ω0):
 
     r = np.sort(np.maximum(r_vals,0))[::-1]
     r /= r.sum()
@@ -88,7 +88,7 @@ def passive_moments(r_vals, omega0):
 
     for k in range(N+1):
 
-        E = k*omega0
+        E = k*ω0
 
         for _ in range(min(comb(N,k), len(r)-i)):
             E_pass += r[i]*E
