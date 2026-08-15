@@ -70,6 +70,22 @@ def initial_state(N, nmax, state):
     psiB = qt.basis(N+1, N)  
     return qt.tensor(psiA, psiB)
 
+###########################
+# Passive state moments
+###########################
+
+def passive_moments(r_vals, ω0):
+
+    r = np.sort(np.maximum(r_vals,0))[::-1]
+    r /= r.sum()
+
+    E = np.arange(len(r)) * ω0
+
+    E_pass = np.sum(r * E)
+    E2_pass = np.sum(r * E**2)
+
+    return E_pass, E2_pass
+
 #########################################
 # optimal charging time τ (maximum power)
 #########################################
@@ -179,20 +195,28 @@ def compute_ergotropy(i, N):
     r_vals = r_vals[idx]
     r_vecs = [r_vecs[i] for i in idx]
 
-    # assign degenerate energies 
-    # e_vals = np.array([0] + [ω0]*N)
-    
-    e_vals = np.arange(N + 1) * ω0
-    
-    E_B = qt.expect(HB, rho_b)
-    
-    E_erg = E_B - sum(r_vals[j]*e_vals[j] for j in range(len(r_vals)))
+    # Passive-state moments in the symmetric subspace
+    E_pass, E2_pass = passive_moments(r_vals, ω0)
 
-    W_2 = (qt.expect(HB**2, rho_b) + sum(r_vals[j]*(e_vals[j])**2 for j in range(len(r_vals)))) - 2 * sum(e_vals[i]*r_vals[i]*qt.expect(HB, r_vecs[i]) for i in range(len(r_vals)))
-    
-    ΔE2 = W_2 - (E_erg)**2
-    
-    ΔE = np.sqrt(ΔE2)
+    E_erg = E_B - E_pass
+
+    # Cross term
+    cross = 0.0
+    i = 0
+    for k in range(N + 1):
+        E = k * ω0
+        for _ in range(min(comb(N, k), len(r_vals) - i)):
+            cross += E * r_vals[i] * qt.expect(HB, r_vecs[i])
+            i += 1
+            if i == len(r_vals):
+                break
+        if i == len(r_vals):
+            break
+
+    W_2 = qt.expect(HB**2, rho_b) + E2_pass - 2 * cross
+
+    ΔE2 = np.real_if_close(W_2 - E_erg**2)
+    ΔE = np.sqrt(max(ΔE2, 0.0))
 
     Ratio = E_erg / E_B
     
