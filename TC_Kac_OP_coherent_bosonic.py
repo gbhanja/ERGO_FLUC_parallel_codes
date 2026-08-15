@@ -204,8 +204,6 @@ def compute_ergotropy(i, N):
 
     # Cross term
     cross = 0.0
-    i = 0
-    cross = 0.0
 
     for k in range(N + 1):
         E = k * ω0
