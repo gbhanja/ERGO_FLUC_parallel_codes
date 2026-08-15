@@ -195,6 +195,8 @@ def compute_ergotropy(i, N):
     r_vals = r_vals[idx]
     r_vecs = [r_vecs[i] for i in idx]
 
+    E_B = qt.expect(HB, rho_b)
+
     # Passive-state moments in the symmetric subspace
     E_pass, E2_pass = passive_moments(r_vals, ω0)
 
@@ -203,15 +205,11 @@ def compute_ergotropy(i, N):
     # Cross term
     cross = 0.0
     i = 0
+    cross = 0.0
+
     for k in range(N + 1):
         E = k * ω0
-        for _ in range(min(comb(N, k), len(r_vals) - i)):
-            cross += E * r_vals[i] * qt.expect(HB, r_vecs[i])
-            i += 1
-            if i == len(r_vals):
-                break
-        if i == len(r_vals):
-            break
+        cross += E * r_vals[k] * qt.expect(HB, r_vecs[k])
 
     W_2 = qt.expect(HB**2, rho_b) + E2_pass - 2 * cross
 
