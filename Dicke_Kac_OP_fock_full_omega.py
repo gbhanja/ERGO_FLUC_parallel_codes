@@ -14,7 +14,7 @@ print("Current working directory:", os.getcwd())
 
 N_arr = [50]  
 N = N_arr[0] 
-nmax = int(N_arr[-1] + 8*np.sqrt(N_arr[-1]))      # Fock space dimension, adjusted for larger N   
+nmax = N + 200      # Fock space dimension, adjusted for larger N   
 ω = 1.0
 ω0_arr = np.arange(1.0, 15.5, 0.5)
 g = 1.0
@@ -29,7 +29,7 @@ def make_filename():
     return f"data_N{N_arr[0]}-{N_arr[-1]}_step{N_arr[1]-N_arr[0]}_w{ω}_w0{ω0_arr[0]}-{ω0_arr[-1]}_g{g}.npz"
 
 # Full path
-filename = os.path.join(data_folder, "Dicke_Kac_OP_coherent_full_omega.npz")
+filename = os.path.join(data_folder, "Dicke_Kac_OP_fock_full_omega.npz")
 
 print("Data file:", filename)
 
@@ -118,7 +118,7 @@ def compute_tau(ω0):
     
     HB_full = qt.tensor(qt.qeye(nmax), HB)
     
-    psi0 = initial_state(N, nmax, "coherent")
+    psi0 = initial_state(N, nmax, "fock")
 
     t_max =  10 / g 
     
@@ -155,7 +155,7 @@ def compute_ergotropy(ω0, τ):
     
     H, HB, Sx, Sy, Sz = dicke_fun(N, nmax, ω, ω0, g)
     
-    psi0 = initial_state(N, nmax, "coherent")
+    psi0 = initial_state(N, nmax, "fock")
 
     opts = {
         "atol":1e-16, 

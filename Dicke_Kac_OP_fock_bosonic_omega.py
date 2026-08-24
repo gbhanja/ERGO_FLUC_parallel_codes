@@ -1,7 +1,6 @@
 import numpy as np
 import qutip as qt
 import matplotlib.pyplot as plt
-from math import comb
 from tqdm import tqdm
 from joblib import Parallel, delayed
 import os
@@ -13,8 +12,8 @@ print("Current working directory:", os.getcwd())
 ############
 
 N_arr = [50]  
-N = N_arr[0] 
-nmax = int(N_arr[-1] + 8*np.sqrt(N_arr[-1]))      # Fock space dimension, adjusted for larger N   
+N = N_arr[0]
+nmax = N + 200      # Fock space dimension, adjusted for larger N
 ω = 1.0
 ω0_arr = np.arange(1.0, 15.5, 0.5)
 g = 1.0
@@ -29,7 +28,7 @@ def make_filename():
     return f"data_N{N_arr[0]}-{N_arr[-1]}_step{N_arr[1]-N_arr[0]}_w{ω}_w0{ω0_arr[0]}-{ω0_arr[-1]}_g{g}.npz"
 
 # Full path
-filename = os.path.join(data_folder, "Dicke_Kac_OP_coherent_full_omega.npz")
+filename = os.path.join(data_folder, "Dicke_Kac_OP_fock_bosonic_omega.npz")
 
 print("Data file:", filename)
 
@@ -65,7 +64,6 @@ def dicke_fun(N, nmax, ω, ω0, g):
 
     return H, HB, Sx, Sy, Sz
 
-
 ################
 # Initial state
 ################
@@ -75,6 +73,8 @@ def initial_state(N, nmax, state):
         psiA = qt.coherent(nmax, np.sqrt(N))
     elif state=="fock":
         psiA = qt.basis(nmax, N)
+    elif state == "squeezed":
+        psiA = qt.squeeze(nmax, np.arcsinh(np.sqrt(N))) * qt.basis(nmax, 0)
     psiB = qt.basis(N+1, N)  
     return qt.tensor(psiA, psiB)
 
@@ -87,24 +87,10 @@ def passive_moments(r_vals, ω0):
     r = np.sort(np.maximum(r_vals,0))[::-1]
     r /= r.sum()
 
-    N = len(r)-1
+    E = np.arange(len(r)) * ω0
 
-    E_pass = 0.0
-    E2_pass = 0.0
-
-    i = 0
-
-    for k in range(N+1):
-
-        E = k*ω0
-
-        for _ in range(min(comb(N,k), len(r)-i)):
-            E_pass += r[i]*E
-            E2_pass += r[i]*E**2
-            i += 1
-
-        if i == len(r):
-            break
+    E_pass = np.sum(r * E)
+    E2_pass = np.sum(r * E**2)
 
     return E_pass, E2_pass
 
@@ -113,21 +99,21 @@ def passive_moments(r_vals, ω0):
 #########################################
 
 def compute_tau(ω0):
-    
+
     H, HB, _, _, _ = dicke_fun(N, nmax, ω, ω0, g)
     
     HB_full = qt.tensor(qt.qeye(nmax), HB)
     
-    psi0 = initial_state(N, nmax, "coherent")
+    psi0 = initial_state(N, nmax, "fock")
 
-    t_max =  10 / g 
+    t_max =  10 / g
     
-    tlist_local = np.linspace(0.001, t_max, 1000)
+    tlist_local = np.linspace(t_max * 0.001, t_max, 1000)
 
     opts = {
         "atol":1e-16, 
         "rtol":1e-14,
-        "nsteps":500000}            ## ODE solver options
+        "nsteps":1000000}            ## ODE solver options
 
     res = qt.sesolve(H, psi0, tlist_local, e_ops=HB_full, options=opts)
 
@@ -155,12 +141,12 @@ def compute_ergotropy(ω0, τ):
     
     H, HB, Sx, Sy, Sz = dicke_fun(N, nmax, ω, ω0, g)
     
-    psi0 = initial_state(N, nmax, "coherent")
+    psi0 = initial_state(N, nmax, "fock")
 
     opts = {
         "atol":1e-16, 
         "rtol":1e-14,
-        "nsteps":500000}            ## ODE solver options
+        "nsteps":1000000}            ## ODE solver options
 
     res = qt.sesolve(H, psi0, [0, τ], options=opts)
     
@@ -214,32 +200,26 @@ def compute_ergotropy(ω0, τ):
     idx = np.argsort(r_vals)[::-1]
     r_vals = r_vals[idx]
     r_vecs = [r_vecs[i] for i in idx]
-
+    
     E_B = qt.expect(HB, rho_b)
-
-    # Passive-state moments in the full 2^N Hilbert space
+    
+   # Passive-state moments in the symmetric subspace
     E_pass, E2_pass = passive_moments(r_vals, ω0)
-
+   
     E_erg = E_B - E_pass
-
+   
     # Cross term
     cross = 0.0
-    i = 0
+   
     for k in range(N + 1):
         E = k * ω0
-        for _ in range(min(comb(N, k), len(r_vals) - i)):
-            cross += E * r_vals[i] * qt.expect(HB, r_vecs[i])
-            i += 1
-            if i == len(r_vals):
-                break
-        if i == len(r_vals):
-            break
-
+        cross += E * r_vals[k] * qt.expect(HB, r_vecs[k])
+   
     W_2 = qt.expect(HB**2, rho_b) + E2_pass - 2 * cross
-
+   
     ΔE2 = np.real_if_close(W_2 - E_erg**2)
     ΔE = np.sqrt(max(ΔE2, 0.0))
-
+   
     Ratio = E_erg / E_B
     
     return ω0, τ, E_B, E_erg, Ratio, ΔE2, W_2, spin_purity, n_mean, edge_population, highest_occupied
