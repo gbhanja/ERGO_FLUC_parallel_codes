@@ -55,7 +55,7 @@ def dicke_fun(N, nmax, ω, ω0, g):
     a = qt.destroy(nmax)
     Ic = qt.qeye(nmax)
 
-    Sx, Sy, Sz, Sp, Sm, HB = collective_ops(N)
+    Sx, Sy, Sz, Sp, Sm  = collective_ops(N)
     IB = qt.qeye(N + 1)
     HB = ω0 * (Sz + (N/2)*qt.qeye(N+1))
     
