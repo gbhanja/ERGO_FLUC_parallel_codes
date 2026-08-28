@@ -144,7 +144,7 @@ def compute_tau(N):
 
     t_max =  10 / g
 
-    tlist_local = np.linspace(t_max * 0.001, t_max, 1000)
+    tlist_local = np.linspace(0.001, t_max, 1000)
 
     opts = {
         "atol":1e-16, 
