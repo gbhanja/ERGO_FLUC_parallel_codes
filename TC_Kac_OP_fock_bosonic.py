@@ -52,7 +52,7 @@ def collective_ops(N):
 def tavis_cummings(N, nmax, ω, ω0, g):
     a = qt.destroy(nmax)
     Sx, Sy, Sz, Sp, Sm = collective_ops(N)
-    HB = Sz + (N/2)*qt.qeye(N+1)
+    HB = ω0 * (Sz + (N/2)*qt.qeye(N+1))
     
     H = (ω * qt.tensor(a.dag()*a, qt.qeye(N+1)) + qt.tensor(qt.qeye(nmax), HB) + (g / np.sqrt(N)) * (qt.tensor(a, Sp) + qt.tensor(a.dag(), Sm)))
     return H, HB, Sx, Sy, Sz
