@@ -108,12 +108,12 @@ def compute_tau(ω0):
 
     t_max =  10 / g
     
-    tlist_local = np.linspace(t_max * 0.001, t_max, 1000)
+    tlist_local = np.linspace(0.001, t_max, 1000)
 
     opts = {
         "atol":1e-16, 
         "rtol":1e-14,
-        "nsteps":1000000}            ## ODE solver options
+        "nsteps":500000}            ## ODE solver options
 
     res = qt.sesolve(H, psi0, tlist_local, e_ops=HB_full, options=opts)
 
@@ -146,7 +146,7 @@ def compute_ergotropy(ω0, τ):
     opts = {
         "atol":1e-16, 
         "rtol":1e-14,
-        "nsteps":1000000}            ## ODE solver options
+        "nsteps":500000}            ## ODE solver options
 
     res = qt.sesolve(H, psi0, [0, τ], options=opts)
     
