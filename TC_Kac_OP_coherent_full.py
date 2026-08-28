@@ -45,9 +45,7 @@ def collective_ops(N):
     Sp = qt.jmat(N/2, '+')
     Sm = Sp.dag()
 
-    HB = Sz + (N/2)*qt.qeye(N+1)
-
-    return Sx, Sy, Sz, Sp, Sm, HB
+    return Sx, Sy, Sz, Sp, Sm
 
 ############################
 # Tavis-Cummings Hamiltonian
@@ -56,7 +54,9 @@ def collective_ops(N):
 def tavis_cummings(N, nmax, ω, ω0, g):
     a = qt.destroy(nmax)
     Sx, Sy, Sz, Sp, Sm, HB = collective_ops(N)
-    H = (ω * qt.tensor(a.dag()*a, qt.qeye(N+1)) + ω0 * qt.tensor(qt.qeye(nmax), HB) + (g / np.sqrt(N)) * (qt.tensor(a, Sp) + qt.tensor(a.dag(), Sm)))
+    HB = Sz + (N/2)*qt.qeye(N+1)
+    
+    H = (ω * qt.tensor(a.dag()*a, qt.qeye(N+1)) + qt.tensor(qt.qeye(nmax), HB) + (g / np.sqrt(N)) * (qt.tensor(a, Sp) + qt.tensor(a.dag(), Sm)))
     return H, HB, Sx, Sy, Sz
 
 ################
