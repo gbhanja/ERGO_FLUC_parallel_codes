@@ -57,7 +57,7 @@ def dicke_fun(N, nmax, ω, ω0, g):
 
     Sx, Sy, Sz, Sp, Sm = collective_ops(N)
     IB = qt.qeye(N + 1)
-    HB = Sz + (N/2)*qt.qeye(N+1)
+    HB = ω0 * (Sz + (N/2)*qt.qeye(N+1))
     
     H = ω  * qt.tensor(a.dag() * a, IB) + qt.tensor(Ic, HB) + (g / np.sqrt(N)) * qt.tensor(a + a.dag(), Sp + Sm)
 
